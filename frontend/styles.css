@@ -1,0 +1,346 @@
+:root {
+    --primary-color: #0078d4;
+    --secondary-color: #e6f1f8;
+    --background-color: #ffffff;
+    --surface-color: #f8f8f8;
+    --text-color: #242424;
+    --muted-text: #666666;
+    --border-color: #e0e0e0;
+    --success-color: #107c10;
+    --warning-color: #d83b01;
+    --chart-grid-color: rgba(100, 100, 100, 0.1);
+    --modal-zindex: 1000;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', 'Helvetica Neue', sans-serif;
+}
+
+body {
+    background-color: var(--background-color);
+    color: var(--text-color);
+    line-height: 1.6;
+    font-size: 14px;
+    overflow-y: hidden;
+}
+
+.container {
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 20px;
+    overflow: hidden;
+}
+
+/* Header Styles */
+header {
+    background-color: var(--surface-color);
+    padding: 8px 15px;
+    border-bottom: 1px solid var(--border-color);
+    margin-bottom: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header h1 {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+/* Tab Management */
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+/* Navigation Tabs */
+nav {
+    display: flex;
+    gap: 6px;
+}
+
+.tab-btn {
+    background: transparent;
+    border: 1px solid var(--border-color);
+    color: var(--muted-text);
+    padding: 6px 12px;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-weight: 500;
+    font-size: 0.9rem;
+}
+
+.tab-btn:hover {
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+}
+
+.tab-btn.active {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    color: white;
+}
+
+/* Dashboard Grid Layout */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 15px;
+    height: calc(100vh - 160px);
+    margin-top: 10px;
+}
+
+.dashboard-left {
+    display: grid;
+    grid-template-rows: 120px 1fr;
+    gap: 15px;
+}
+
+.dashboard-right {
+    height: 100%;
+}
+
+/* Chart Containers */
+.chart-container {
+    background: white;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    padding: 10px;
+    position: relative;
+    height: 100%;
+}
+
+#budgetCard-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: var(--surface-color);
+    min-height: 120px;
+    padding: 10px;
+}
+
+#categoryChart-container {
+    min-height: calc(100% - 135px);
+}
+
+.dashboard-right .chart-container {
+    min-height: 100%;
+}
+
+/* Chart Elements */
+canvas {
+    width: 100% !important;
+    height: 90% !important;
+    max-height: 90% !important;
+}
+
+/* Budget Card Styling */
+.big-number {
+    font-size: 1.8rem;
+    margin: 5px 0;
+    color: var(--primary-color);
+}
+
+.progress-container {
+    width: 70%;
+    height: 6px;
+    background: var(--background-color);
+    border-radius: 3px;
+    margin-top: 10px;
+    overflow: hidden;
+}
+
+.progress-bar {
+    height: 100%;
+    background: var(--primary-color);
+    transition: width 0.3s ease;
+}
+
+
+
+@keyframes modalSlideIn {
+    from { transform: translateY(-20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+/* Action Buttons */
+.add-btn {
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 3px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background 0.2s ease;
+    margin: 5px 0;
+}
+
+.add-btn:hover {
+    background: #006cbd;
+}
+
+.edit-btn {
+    background: #e3f2fd;
+    color: var(--primary-color);
+    border: 1px solid #90caf9;
+    padding: 4px 8px;
+    border-radius: 3px;
+    font-size: 0.85rem;
+    cursor: pointer;
+}
+
+.delete-btn {
+    background: #ffebee;
+    color: var(--warning-color);
+    border: 1px solid #ffcdd2;
+    padding: 4px 8px;
+    border-radius: 3px;
+    font-size: 0.85rem;
+    cursor: pointer;
+}
+
+.edit-btn:hover, .delete-btn:hover {
+    opacity: 0.9;
+}
+
+/* Table Styles */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    margin: 8px 0;
+    font-size: 0.85rem;
+}
+
+th {
+    background: var(--surface-color);
+    color: var(--muted-text);
+    padding: 6px 10px;
+    text-align: left;
+}
+
+td {
+    padding: 6px 10px;
+    border-top: 1px solid var(--border-color);
+}
+
+/* Form Styles */
+.form-group {
+    margin-bottom: 10px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 3px;
+    font-size: 0.9rem;
+    color: var(--muted-text);
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 6px 8px;
+    border: 1px solid var(--border-color);
+    border-radius: 3px;
+    font-size: 0.9rem;
+    background: white;
+    color: var(--text-color);
+}
+
+.submit-btn {
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 3px;
+    width: 100%;
+    margin-top: 8px;
+    cursor: pointer;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+    .dashboard-grid {
+        height: calc(100vh - 140px);
+        grid-template-columns: 1fr;
+    }
+    
+    .dashboard-left {
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: auto;
+    }
+    
+    #categoryChart-container {
+        grid-column: span 2;
+        min-height: 280px;
+    }
+}
+
+@media (max-width: 768px) {
+    .dashboard-grid {
+        height: auto;
+        min-height: calc(100vh - 140px);
+    }
+    
+    .dashboard-left {
+        grid-template-columns: 1fr;
+        grid-template-rows: 100px 300px;
+    }
+    
+    #categoryChart-container {
+        grid-column: span 1;
+        min-height: 250px;
+    }
+    
+    .chart-container {
+        min-height: 300px !important;
+    }
+    
+    .modal-content {
+        width: 95%;
+    }
+    
+    header h1 {
+        font-size: 1.1rem;
+    }
+    
+    .tab-btn {
+        font-size: 0.8rem;
+        padding: 5px 10px;
+    }
+}
+
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    position: relative;
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 400px;
+    transform: translateY(0);
+    animation: modalSlideIn 0.3s ease;
+}
