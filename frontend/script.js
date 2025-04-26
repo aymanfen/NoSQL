@@ -50,6 +50,7 @@ document.addEventListener('DOMContentLoaded', function() {
 // Charts
 let trendChart = null;
 let categoryChart = null;
+let dynamicFieldChart = null;
 
 function setupFormModals() {
     // Transaction form
@@ -196,6 +197,12 @@ function setupFormModals() {
             e.target.style.display = 'none';
         }
     });
+
+    // Add event listener to dynamic field select
+    const dynamicFieldSelect = document.getElementById('dynamic-field-select');
+    dynamicFieldSelect.addEventListener('change', () => {
+        loadDashboardData();
+    });
 }
 
 function loadDashboardData() {
@@ -223,6 +230,7 @@ function loadDashboardData() {
                     // Create charts
                     createTrendChart(transactions);
                     createCategoryChart(expenses);
+                    createDynamicFieldChart(expenses);
                 });
         });
 }
@@ -390,6 +398,71 @@ function createCategoryChart(expenses) {
         });
 }
 
+function createDynamicFieldChart(expenses) {
+    const ctx = document.getElementById('dynamicFieldChart').getContext('2d');
+    const selectedField = document.getElementById('dynamic-field-select').value;
+
+    if (!selectedField) {
+        if (dynamicFieldChart) {
+            dynamicFieldChart.destroy();
+        }
+        return;
+    }
+
+    const fieldTotals = {};
+    expenses.forEach(expense => {
+        if (expense[selectedField]) {
+            const fieldValue = expense[selectedField];
+            fieldTotals[fieldValue] = (fieldTotals[fieldValue] || 0) + parseFloat(expense.amount);
+        }
+    });
+
+    const labels = Object.keys(fieldTotals);
+    const data = Object.values(fieldTotals);
+
+    // Generate colors
+    const backgroundColors = labels.map((_, i) => {
+        const hue = (i * 137.508) % 360; // Golden angle approximation
+        return `hsl(${hue}, 70%, 60%)`;
+    });
+
+    if (dynamicFieldChart) {
+        dynamicFieldChart.destroy();
+    }
+
+    dynamicFieldChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: labels,
+            datasets: [{
+                data: data,
+                backgroundColor: backgroundColors,
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            cutout:'60%',
+            plugins: {
+                legend: {
+                    position: 'right',
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            const label = context.label || '';
+                            const value = context.raw || 0;
+                            const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                            const percentage = Math.round((value / total) * 100);
+                            return `${label}: $${value.toFixed(2)} (${percentage}%)`;
+                        }
+                    }
+                }
+            }
+        }
+    });
+}
+
 // Transaction functions
 function loadTransactions() {
     fetch('/api/transactions')
@@ -431,6 +504,24 @@ function loadTransactions() {
 
             document.querySelectorAll('.delete-btn').forEach(btn => {
                 btn.addEventListener('click', () => deleteTransaction(btn.getAttribute('data-id')));
+            });
+
+            // Populate dynamic field select
+            const dynamicFieldSelect = document.getElementById('dynamic-field-select');
+            dynamicFieldSelect.innerHTML = '<option value="">Select Dynamic Field</option>';
+            const dynamicFields = new Set();
+            transactions.forEach(transaction => {
+                Object.keys(transaction).forEach(key => {
+                    if (!['_id', 'amount', 'description', 'category', 'date', 'type'].includes(key)) {
+                        dynamicFields.add(key);
+                    }
+                });
+            });
+            dynamicFields.forEach(field => {
+                const option = document.createElement('option');
+                option.value = field;
+                option.textContent = field;
+                dynamicFieldSelect.appendChild(option);
             });
         });
 }
